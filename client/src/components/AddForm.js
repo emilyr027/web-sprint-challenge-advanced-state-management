@@ -1,24 +1,51 @@
-import React from 'react';
+import React, {useState} from "react"
+import { connect } from "react-redux"
+import { addSmurfs } from "../actions/index"
 
-class AddForm extends React.Component {
+const AddForm = (props) => {
+    const [newSmurf, setNewSmurf] = useState({
+        name: "",
+        position: "",
+        nickname: ""
+    })
 
-    render() {
-        return(<section>
+    const handleChanges = (e) => {
+        setNewSmurf({ ...newSmurf, [e.target.name] : [e.target.value]})
+    }
+
+    const onSubmit = (e) => {
+        e.preventDefault();
+        setNewSmurf("");
+        props.addSmurfs(newSmurf);
+    }
+
+    return (
+        <section>
             <h2>Add Smurf</h2>
             <form>
-                <div className="form-group">
-                    <label htmlFor="name">Name:</label><br/>
-                    <input onChange={this.handleChange} name="name" id="name" />
-                </div>
-
+            <div className="form-group">
+                <input name="name" type="text" placeholder="Smurf's Name" onChange={handleChanges}></input>
+                <input name="position" type="text" placeholder="Smurf's Position" onChange={handleChanges}></input>
+                <input name="nickname" type="text" placeholder="Smurf's Nickname" onChange={handleChanges}></input>
+            </div>
                 <div data-testid="errorAlert" className="alert alert-danger" role="alert">Error: </div>
-                <button>Submit Smurf</button>
+                <button type="submit" onClick={onSubmit}>Submit Smurf</button>
             </form>
-        </section>);
+        </section>
+    )
+}
+
+const mapStateToProps = (state) => {
+    return {
+        smurfs: state.smurfs,
+        error: state.error
     }
 }
 
-export default AddForm;
+export default connect(mapStateToProps, {addSmurfs})(AddForm)
+
+
+
 
 //Task List:
 //1. Add in all necessary import components and library methods.
